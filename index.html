@@ -1,16 +1,42 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Supabase Form</title>
+  <title>Supabase Google Auth</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <h2>Signup Form</h2>
-  <input type="text" id="name" placeholder="Name" />
-  <input type="email" id="email" placeholder="Email" />
-  <button onclick="submitData()">Submit</button>
 
-  <script type="module" src="app.js"></script>
+  <h2>Login with Google</h2>
+  <button onclick="loginWithGoogle()">Login with Google</button>
+
+  <script>
+    // ✅ Supabase client banane ke liye global object ka naam use karte hain: supabaseJs
+    const supabaseClient = supabase.createClient(
+      'https://ojoqeqkjvgckrfkcyrbo.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qb3FlcWtqdmdja3Jma2N5cmJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2Nzg0MzAsImV4cCI6MjA2OTI1NDQzMH0.I57r4FrsaU0m1w-pAGPnWW4V6JTgA9qYuV9cPBU2GWI'
+    );
+
+    async function loginWithGoogle() {
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+      });
+
+      if (error) {
+        alert('Login failed: ' + error.message);
+      } else {
+        console.log('Redirecting to Google login...');
+      }
+    }
+
+    // Optional: Check user session
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        console.log('User is logged in:', session.user);
+      } else {
+        console.log('User not logged in');
+      }
+    });
+  </script>
+
 </body>
 </html>
